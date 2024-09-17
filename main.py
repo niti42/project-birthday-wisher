@@ -2,9 +2,14 @@ import smtplib
 import pandas as pd
 import datetime as dt
 import random
+from dotenv import load_dotenv
+import os
 
-my_email = "nithishkr62@gmail.com"
-password = "hmkauryxkqiantxo"  # nithishkr62
+load_dotenv()
+
+
+my_email = os.getenv("my_email")
+password = os.getenv("password")
 
 
 def get_birthday_letter(to_name):
@@ -15,10 +20,7 @@ def get_birthday_letter(to_name):
     with open(f"letter_templates/{template_file}", "r") as f:
         template = f.read()
 
-    birthday_letter = template.replace(
-        "[NAME]", to_name).replace("Angela", from_name)
-
-    return birthday_letter
+    return template.replace("[NAME]", to_name).replace("Angela", from_name)
 
 
 def send_email(subject, message, to_email, user_email, user_password, email_provider="smtp.gmail.com"):
@@ -32,11 +34,11 @@ def send_email(subject, message, to_email, user_email, user_password, email_prov
                                 to_addrs=to_email,
                                 msg=f"Subject:{subject}\n\n{message}")
             print(f"Message Sent to {to_email}!")
-        except:
+        except Exception:
             print("Error! Message not sent")
 
 
-today_date = f"{dt.datetime.today().month}-{dt.datetime.today().day}"
+today_date = f"{dt.datetime.now().month}-{dt.datetime.now().day}"
 letters = ["letter_1.txt", "letter_2.txt", "letter_3.txt"]
 
 birthdays_df = pd.read_csv(r'birthdays.csv')
